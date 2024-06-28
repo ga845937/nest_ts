@@ -11,6 +11,7 @@
             "@model/*": ["model/*"],
             "@modules/*": ["modules/*"],
             "@provider/*": ["provider/*"],
+            "@service/*": ["service/*"],
             "@customType/*": ["types/*"]
         },
         "target": "ES2022",
