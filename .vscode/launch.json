@@ -3,6 +3,7 @@
     "configurations": [
         {
             "name": "nest_ts",
+            //"preLaunchTask": "postgres_build",
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "node",
