@@ -1,5 +1,5 @@
 node_modules
-logs
+log
 dist
 package-lock.json
 src/env.ts

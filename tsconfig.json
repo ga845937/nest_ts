@@ -10,6 +10,7 @@
             "@middleware/*": ["middleware/*"],
             "@model/*": ["model/*"],
             "@modules/*": ["modules/*"],
+            "@pipe/*": ["pipe/*"],
             "@provider/*": ["provider/*"],
             "@service/*": ["service/*"],
             "@customType/*": ["types/*"]
