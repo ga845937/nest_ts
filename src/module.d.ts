@@ -1,12 +1,9 @@
-import type { IUserInfo } from "@botgame-type/cms/user";
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as express from "express";
 
 declare module "express" {
     /* eslint-disable-next-line @typescript-eslint/naming-convention */
     interface Request {
-        userInfo: IUserInfo,
         traceID: string,
         service: string,
         clientIP: string,
