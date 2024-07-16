@@ -1,10 +1,11 @@
 import { httpPort } from "@env";
-import { HttpExceptionFilter } from "@filter/httpException";
-import { LoggerInterceptor } from "@interceptor/logger";
-import { ResponseTransformInterceptor } from "@interceptor/responseTransform";
-import { MainModule } from "@modules/main";
+import { HttpExceptionFilter } from "@filter/httpException.filter";
+import { LoggerInterceptor } from "@interceptor/logger.interceptor";
+import { ResponseTransformInterceptor } from "@interceptor/responseTransform.interceptor";
 import { NestFactory } from "@nestjs/core";
-import { Validator } from "@pipe/validator";
+import { Validator } from "@pipe/validator.pipe";
+
+import { MainModule } from "./main.module";
 
 const main = async (): Promise<void> => {
     const app = await NestFactory.create(MainModule);

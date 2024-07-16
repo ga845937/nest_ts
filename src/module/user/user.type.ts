@@ -1,6 +1,10 @@
 import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
-export class CreateUser {
+export enum UserRoute {
+    Base = "/user",
+}
+
+export class CreateUserRequest {
     @IsEmail()
     public email: string;
 

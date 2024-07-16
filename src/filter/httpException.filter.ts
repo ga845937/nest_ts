@@ -1,8 +1,8 @@
 import type { ExceptionFilter, ArgumentsHost } from "@nestjs/common";
 import type { Request, Response } from "express";
 
+import { responseLog } from "@interceptor/logger.interceptor";
 import { Catch, HttpException } from "@nestjs/common";
-import { responseLog } from "service/logger";
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {

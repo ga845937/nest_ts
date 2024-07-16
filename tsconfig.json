@@ -4,15 +4,12 @@
         "paths": {
             "@packageJson": ["../package.json"],
             "@env": ["env"],
-            "@controller/*": ["controller/*"],
+            "@db/*": ["db/*"],
             "@filter/*": ["filter/*"],
             "@interceptor/*": ["interceptor/*"],
             "@middleware/*": ["middleware/*"],
-            "@model/*": ["model/*"],
-            "@modules/*": ["modules/*"],
+            "@module/*": ["module/*"],
             "@pipe/*": ["pipe/*"],
-            "@provider/*": ["provider/*"],
-            "@service/*": ["service/*"],
             "@customType/*": ["types/*"]
         },
         "target": "ES2022",
@@ -29,7 +26,12 @@
         "emitDecoratorMetadata": true,
         "lib": ["ES2022", "DOM"]
     },
-    "include": ["src/**/*", "build/*"],
+    "include": [
+        "src/**/*",
+        "build/*",
+        "src/module/main/main.provider.ts",
+        "src/module/main/main.controller.ts"
+    ],
     "exclude": ["node_modules"],
     "ts-node": {
         "files": true
