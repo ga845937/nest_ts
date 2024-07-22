@@ -1,6 +1,6 @@
-import { PostgresDatabase } from "@customType/db";
 import { nodeEnv, dbConfig } from "@env";
 import { Sequelize } from "sequelize";
+import { PostgresDatabase } from "type/db";
 
 import { initModels } from "./entity/init-models";
 

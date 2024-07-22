@@ -8,6 +8,7 @@ const metadata: ModuleMetadata = {
     imports: [UserModule] as Type<unknown>[],
     controllers: [] as Type<unknown>[],
     providers: [] as Provider[],
+    exports: [] as Provider[],
 };
 
 @Module(metadata)

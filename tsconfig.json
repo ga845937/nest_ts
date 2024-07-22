@@ -6,11 +6,12 @@
             "@env": ["env"],
             "@db/*": ["db/*"],
             "@filter/*": ["filter/*"],
+            "@guard/*": ["guard/*"],
             "@interceptor/*": ["interceptor/*"],
             "@middleware/*": ["middleware/*"],
             "@module/*": ["module/*"],
             "@pipe/*": ["pipe/*"],
-            "@customType/*": ["types/*"]
+            "@type/*": ["type/*"]
         },
         "target": "ES2022",
         "module": "CommonJS",
@@ -26,12 +27,7 @@
         "emitDecoratorMetadata": true,
         "lib": ["ES2022", "DOM"]
     },
-    "include": [
-        "src/**/*",
-        "build/*",
-        "src/module/main/main.provider.ts",
-        "src/module/main/main.controller.ts"
-    ],
+    "include": ["src/**/*", "build/**/*", "migration/**/*"],
     "exclude": ["node_modules"],
     "ts-node": {
         "files": true

@@ -18,7 +18,8 @@ const option: AutoOptions = {
     indentation: 4,
     additional: {
         timestamps: false, // don't add timestamps fields (createdAt, updatedAt)
-    }
+    },
+    skipTables: ["SequelizeMeta"], // don't generate models for these tables
 };
 
 const auto = new SequelizeAuto(dbConfig.database, dbConfig.username, dbConfig.password, option);

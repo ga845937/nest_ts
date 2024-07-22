@@ -1,14 +1,13 @@
+import type { CreateUserRequest, UserFindByPKAttributes } from "../user.type";
 import type { initModels } from "@db/postgres/entity/init-models";
 import type { UserCreationAttributes, UserAttributes } from "@db/postgres/entity/user";
-import type { NonNullFindOptions, UpdateOptions, DestroyOptions } from "sequelize";
+import type { NonNullFindOptions } from "sequelize";
 
-import { PostgresDatabase } from "@customType/db";
 import { Injectable, Inject } from "@nestjs/common";
-
-import { CreateUserRequest } from "./user.type";
+import { PostgresDatabase } from "type/db";
 
 @Injectable()
-export class UserProvider {
+export class UserService {
     constructor(
         @Inject(PostgresDatabase.NODEJS) private readonly nodejsDB: ReturnType<typeof initModels>
     ) { }
@@ -21,5 +20,15 @@ export class UserProvider {
         };
 
         await this.nodejsDB.User.create(data);
+    };
+
+    public readUserByPK = async ({ email }: UserFindByPKAttributes): Promise<UserAttributes> => {
+        const findOption: NonNullFindOptions<UserAttributes> = {
+            rejectOnEmpty: true,
+            raw: true,
+        };
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return await this.nodejsDB.User.findByPk(email, findOption);
     };
 }

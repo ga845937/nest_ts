@@ -10,7 +10,11 @@
         "sourceType": "module"
     },
     "extends": ["eslint:recommended"],
-    "ignorePatterns": ["dist/**/*", "node_modules/**/*"],
+    "ignorePatterns": [
+        "dist/**/*",
+        "node_modules/**/*",
+        "src/db/postgres/entity/*"
+    ],
     "settings": {
         "import/resolver": {
             "node": {
