@@ -7,6 +7,7 @@ import {
     HttpException,
     HttpCode, HttpStatus,
 } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { ErrorMessage } from "@type/error";
 import { UserRoute } from "@type/route";
 import { UniqueConstraintError } from "sequelize";
@@ -14,11 +15,12 @@ import { UniqueConstraintError } from "sequelize";
 import { UserService } from "./provider/user.service";
 import { CreateUserRequest, ReadUserRequest } from "./user.type";
 
-@Controller()
+@ApiTags(UserRoute.Base)
+@Controller(UserRoute.Base)
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
-    @Post(UserRoute.Base)
+    @Post()
     @HttpCode(HttpStatus.CREATED)
     public async createUser(@Body() body: CreateUserRequest): Promise<void> {
         try {
@@ -32,7 +34,7 @@ export class UserController {
         }
     }
 
-    @Get(UserRoute.Base)
+    @Get()
     @HttpCode(HttpStatus.OK)
     public async readUser(@Query() query: ReadUserRequest): Promise<UserAttributes> {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return

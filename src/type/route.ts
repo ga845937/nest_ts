@@ -1,3 +1,3 @@
 export enum UserRoute {
-    Base = "/user",
+    Base = "user",
 }
