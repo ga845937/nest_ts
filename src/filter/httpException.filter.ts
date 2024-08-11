@@ -2,27 +2,39 @@ import type { ExceptionFilter, ArgumentsHost } from "@nestjs/common";
 import type { Request, Response } from "express";
 
 import { LoggerInterceptor } from "@interceptor/logger.interceptor";
-import { Catch, HttpException } from "@nestjs/common";
+import { Catch, HttpException, HttpStatus } from "@nestjs/common";
+import { ErrorMessage } from "@type/error";
 
-@Catch(HttpException)
+@Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
     constructor(private readonly logger: LoggerInterceptor) { }
 
-    public catch = (exception: HttpException, host: ArgumentsHost): void => {
+    public catch = (exception: unknown, host: ArgumentsHost): void => {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
-        const status = exception.getStatus();
+        let status = HttpStatus.INTERNAL_SERVER_ERROR;
+        let message = ErrorMessage.ServerError as string;
+
+        if (exception instanceof HttpException) {
+            if (exception.cause) {
+                request.requestError = exception.cause as Error;
+            }
+            status = exception.getStatus();
+            const exceptionResponse = exception.getResponse() as Record<string, string>;
+            message = typeof exceptionResponse === "string" ? exceptionResponse : exceptionResponse.message;
+        }
+        else {
+            request.requestError = exception as Error;
+        }
 
         const responseData = {
             traceID: request.traceID,
-            message: exception.getResponse(),
+            message,
         };
 
         this.logger.responseLog(request, response, responseData);
 
-        response
-            .status(status)
-            .json(responseData);
+        response.status(status).json(responseData);
     };
 }
