@@ -1,6 +1,7 @@
 import { httpPort } from "@env";
 import { nodeEnv, apmServerURL as serverUrl } from "@env";
 import { HttpExceptionFilter } from "@filter/httpException.filter";
+import { ProgramExceptionFilter } from "@filter/programException.filter";
 import { AuthorizationGuard } from "@guard/authorization.guard";
 import { LoggerInterceptor } from "@interceptor/logger.interceptor";
 import { ResponseTransformInterceptor } from "@interceptor/responseTransform.interceptor";
@@ -26,7 +27,7 @@ const main = async (): Promise<void> => {
     app.useGlobalInterceptors(logger, new ResponseTransformInterceptor());
     app.useGlobalGuards(new AuthorizationGuard());
     app.useGlobalPipes(new Validator());
-    app.useGlobalFilters(new HttpExceptionFilter(logger));
+    app.useGlobalFilters(new HttpExceptionFilter(logger), new ProgramExceptionFilter(logger));
 
     if (nodeEnv === "dev") {
         initOpenAPI(app);
