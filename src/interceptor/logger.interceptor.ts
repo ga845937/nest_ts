@@ -9,11 +9,18 @@ import { join } from "path";
 import { logPath, nodeEnv } from "@env";
 import { Injectable } from "@nestjs/common";
 import { name as projectName } from "@packageJson";
-import elasticApmNode from "elastic-apm-node";
 import { tap } from "rxjs/operators";
 import winston from "winston";
 /* eslint-disable-next-line @typescript-eslint/naming-convention */
 import DailyRotateFile from "winston-daily-rotate-file";
+
+interface IVersion {
+    projectName: string,
+    projectVersion: string,
+    branch: string,
+    hash: string,
+    subModule?: Record<string, IVersion>,
+}
 
 interface ILogData {
     program: string,
@@ -25,17 +32,12 @@ interface ILogData {
     requestMethod: string,
     requestURI: string,
     time: number,
-    // version: IVersion,
+    //version: IVersion,
     debugInfo?: unknown,
-}
-
-interface IRequestLogData extends ILogData {
     requestHeader: Record<string, unknown>,
     requestQuery?: Record<string, unknown>,
+    requestParam?: Record<string, unknown>,
     requestBody?: unknown,
-}
-
-interface IResponseLogData extends ILogData {
     httpStatus: number,
     responseHeader: Record<string, unknown>,
     responseData: Record<string, unknown>,
@@ -46,7 +48,7 @@ interface IResponseLogData extends ILogData {
 export class LoggerInterceptor implements NestInterceptor {
     private readonly logger: Logger;
 
-    constructor(private readonly elasticApm: elasticApmNode.Agent) {
+    constructor() {
         this.logger = winston.createLogger({
             transports: [
                 new DailyRotateFile({
@@ -63,40 +65,28 @@ export class LoggerInterceptor implements NestInterceptor {
     public intercept = (context: ExecutionContext, next: CallHandler): Observable<unknown> => {
         const ctx = context.switchToHttp();
         const request = ctx.getRequest<Request>();
-        this.requestLog(request);
 
-        return next
-            .handle()
-            .pipe(
-                tap((responseData: Record<string, unknown>) => {
-                    const response = ctx.getResponse<Response>();
-                    this.responseLog(request, response, responseData);
-                }),
-            );
+        return next.handle().pipe(
+            tap((responseData: unknown) => {
+                const response = ctx.getResponse<Response>();
+
+                if (typeof responseData !== "object" || Array.isArray(responseData) ||
+                    responseData === null || responseData === undefined) {
+                    responseData = {
+                        traceID: request.traceID,
+                        data: responseData
+                    };
+                }
+                this.responseLog(request, response, responseData as Record<string, unknown>);
+            }),
+        );
     };
 
-    private createBaseLogData(req: Request): ILogData {
-        return {
-            program: "nodejs",
-            project: projectName,
-            env: nodeEnv,
-            service: req.service,
-            traceID: req.traceID,
-            clientIP: req.clientIP,
-            requestMethod: req.method,
-            requestURI: req.originalUrl,
-            time: +new Date(),
-            // version
-        };
-    }
-
     private errorToJson = (error: Error): Record<string, unknown> => {
-        const stack = error.stack.split("\n").map((x: string) => x.trim());
-        stack.shift();
         return {
             name: error.name,
             message: error.message,
-            stack
+            stack: error.stack,
         };
     };
 
@@ -104,40 +94,31 @@ export class LoggerInterceptor implements NestInterceptor {
         return this.logger;
     }
 
-    public get elasticApmInstance(): elasticApmNode.Agent {
-        return this.elasticApm;
-    }
-
-    public requestLog = (request: Request): void => {
-        request.traceID = this.elasticApm.currentTransaction.ids["trace.id"];
-        request.service = request.path.split("/")[1];
-        request.clientIP = request.ip.replace("::ffff:", "");
-
-        const reqLogData: IRequestLogData = {
-            ...this.createBaseLogData(request),
+    public responseLog = (request: Request, response: Response, responseData: Record<string, unknown>): void => {
+        const responseLog: ILogData = {
+            program: "nodejs",
+            project: projectName,
+            env: nodeEnv,
+            service: request.service,
+            traceID: request.traceID,
+            clientIP: request.clientIP,
+            requestMethod: request.method,
+            requestURI: request.originalUrl,
+            time: +new Date(),
+            //version,
             requestHeader: request.headers,
             requestQuery: request.query || {},
-            requestBody: request.body || {}
-        };
-
-        this.logger.info(reqLogData);
-    };
-
-    public responseLog = (request: Request, response: Response, responseData: Record<string, unknown>): void => {
-        const resLogData: IResponseLogData = {
-            ...this.createBaseLogData(request),
+            requestParam: request.params || {},
+            requestBody: request.body || {},
             httpStatus: response.statusCode,
             responseHeader: response.getHeaders(),
             responseData
         };
 
         if (request.requestError) {
-            resLogData.error = this.errorToJson(request.requestError);
-        }
-        if (request.debugInfo) {
-            resLogData.debugInfo = request.debugInfo instanceof Error ? this.errorToJson(request.debugInfo) : request.debugInfo;
+            responseLog.error = this.errorToJson(request.requestError);
         }
 
-        this.logger.info(resLogData);
+        this.logger.info(responseLog);
     };
 }

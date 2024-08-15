@@ -8,7 +8,6 @@ declare module "express" {
         service: string,
         clientIP: string,
         requestError: Error,
-        debugInfo: unknown,
     }
 
     /* eslint-disable-next-line @typescript-eslint/naming-convention */

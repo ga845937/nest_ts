@@ -10,6 +10,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     constructor(private readonly logger: LoggerInterceptor) { }
 
     public catch = (exception: unknown, host: ArgumentsHost): void => {
+        console.error(exception);
+
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
@@ -22,7 +24,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
             }
             status = exception.getStatus();
             const exceptionResponse = exception.getResponse() as Record<string, string>;
-            message = typeof exceptionResponse === "string" ? exceptionResponse : exceptionResponse.message;
+            message = typeof exceptionResponse === "string" ? exceptionResponse : exceptionResponse.message.toString();
         }
         else {
             request.requestError = exception as Error;
@@ -33,8 +35,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
             message,
         };
 
+        response.status(status);
         this.logger.responseLog(request, response, responseData);
-
-        response.status(status).json(responseData);
+        response.json(responseData);
     };
 }
