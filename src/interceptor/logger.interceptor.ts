@@ -4,11 +4,12 @@ import type { TransformableInfo } from "logform";
 import type { Observable } from "rxjs";
 import type { Logger } from "winston";
 
+import { execSync } from "child_process";
 import { join } from "path";
 
 import { logPath, nodeEnv } from "@env";
 import { Injectable } from "@nestjs/common";
-import { name as projectName } from "@packageJson";
+import { name as projectName, version as projectVersion, } from "@packageJson";
 import { tap } from "rxjs/operators";
 import winston from "winston";
 /* eslint-disable-next-line @typescript-eslint/naming-convention */
@@ -22,6 +23,13 @@ interface IVersion {
     subModule?: Record<string, IVersion>,
 }
 
+const version: IVersion = {
+    projectName,
+    projectVersion,
+    branch: execSync("git branch --show-current", { encoding: "utf8" }).trim(),
+    hash: execSync("git log --pretty=format:%h -n 1", { encoding: "utf8" }).trim(),
+};
+
 interface ILogData {
     program: string,
     project: string,
@@ -32,7 +40,7 @@ interface ILogData {
     requestMethod: string,
     requestURI: string,
     time: number,
-    //version: IVersion,
+    version: IVersion,
     debugInfo?: unknown,
     requestHeader: Record<string, unknown>,
     requestQuery?: Record<string, unknown>,
@@ -67,17 +75,9 @@ export class LoggerInterceptor implements NestInterceptor {
         const request = ctx.getRequest<Request>();
 
         return next.handle().pipe(
-            tap((responseData: unknown) => {
+            tap((responseData: Record<string, unknown>) => {
                 const response = ctx.getResponse<Response>();
-
-                if (typeof responseData !== "object" || Array.isArray(responseData) ||
-                    responseData === null || responseData === undefined) {
-                    responseData = {
-                        traceID: request.traceID,
-                        data: responseData
-                    };
-                }
-                this.responseLog(request, response, responseData as Record<string, unknown>);
+                this.responseLog(request, response, responseData);
             }),
         );
     };
@@ -105,7 +105,7 @@ export class LoggerInterceptor implements NestInterceptor {
             requestMethod: request.method,
             requestURI: request.originalUrl,
             time: +new Date(),
-            //version,
+            version,
             requestHeader: request.headers,
             requestQuery: request.query || {},
             requestParam: request.params || {},
