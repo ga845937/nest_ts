@@ -1,14 +1,14 @@
-import type { ModuleMetadata, Type, Provider } from "@nestjs/common";
+import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
 
-import { PostgresModule } from "@db/postgres.module";
+import { PostgresModule } from "@database/postgres.module";
 import { Module } from "@nestjs/common";
 import { Validator } from "@pipe/validator.pipe";
 
 const metadata: ModuleMetadata = {
-    imports: [PostgresModule] as Type<unknown>[],
     controllers: [] as Type<unknown>[],
-    providers: [Validator] as Provider[],
-    exports: [PostgresModule, Validator] as Provider[],
+    exports    : [PostgresModule, Validator] as Provider[],
+    imports    : [PostgresModule] as Type<unknown>[],
+    providers  : [Validator] as Provider[],
 };
 
 @Module(metadata)

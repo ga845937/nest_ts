@@ -1,4 +1,4 @@
-import type { UserAttributes, UserPk } from "@db/postgres/entity/user";
+import type { UserAttributes, UserPk } from "@database/postgres/entity/user";
 
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
@@ -8,8 +8,8 @@ export type UserStatusEnum = UserAttributes["status"];
 
 export class CreateUserRequest {
     @ApiProperty()
-    @IsNotEmpty()
     @IsEmail()
+    @IsNotEmpty()
     @MaxLength(100)
     public email: string;
 
@@ -22,14 +22,14 @@ export class CreateUserRequest {
 
 export class ReadUserRequest {
     @ApiProperty()
-    @IsNotEmpty()
     @IsEmail()
+    @IsNotEmpty()
     public email: string;
 }
 
 export class UpdateUserRequest {
-    @IsNotEmpty()
     @IsEmail()
+    @IsNotEmpty()
     public email: string;
 
     @ApiPropertyOptional()

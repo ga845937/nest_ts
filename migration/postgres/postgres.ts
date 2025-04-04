@@ -1,35 +1,35 @@
-import { dbConfig } from "@env";
+import { dbConfig } from "config";
 import { Sequelize } from "sequelize";
-import { Umzug, SequelizeStorage } from "umzug";
+import { SequelizeStorage, Umzug } from "umzug";
 
 const sequelize = new Sequelize({
-    dialect: "postgres",
-    host: dbConfig.host,
-    port: dbConfig.port,
-    username: dbConfig.username,
-    password: dbConfig.password,
     database: dbConfig.database,
+    dialect : "postgres",
+    host    : dbConfig.master.host,
+    password: dbConfig.master.password,
+    port    : dbConfig.master.port,
+    username: dbConfig.master.username,
 });
 
 const migrator = new Umzug({
+    context   : sequelize.getQueryInterface(),
+    logger    : console,
+    storage   : new SequelizeStorage({ sequelize }),
     migrations: {
         glob: ["migration/*.migration.ts", { cwd: __dirname }],
     },
-    context: sequelize.getQueryInterface(),
-    storage: new SequelizeStorage({ sequelize }),
-    logger: console,
 });
 
 const seeder = new Umzug({
+    context   : sequelize.getQueryInterface(),
+    logger    : console,
+    storage   : new SequelizeStorage({ sequelize }),
     migrations: {
         glob: ["seed/*.seed.ts", { cwd: __dirname }],
     },
-    context: sequelize.getQueryInterface(),
-    storage: new SequelizeStorage({ sequelize }),
-    logger: console,
 });
 
-const init = async (): Promise<void> => {
+const init = async(): Promise<void> => {
     await migrator.up();
     await seeder.up();
 };

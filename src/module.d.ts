@@ -1,17 +1,21 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import * as express from "express";
+declare global {
+    type SortOrder = -1 | "asc" | "ascending" | "desc" | "descending" | 1;
 
-declare module "express" {
-    /* eslint-disable-next-line @typescript-eslint/naming-convention */
-    interface Request {
-        traceID: string,
-        service: string,
-        clientIP: string,
-        requestError: Error,
+    interface IUserInfo {
+        readonly account: string,
+        readonly agentId: number,
+        readonly exp?: number,
+        readonly id: number,
+        readonly roleId: number,
+        readonly verification: boolean,
     }
 
-    /* eslint-disable-next-line @typescript-eslint/naming-convention */
-    interface Response {
-        responseData: Record<string, unknown>,
+    namespace Express {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        export interface Request {
+            userInfo: IUserInfo,
+        }
     }
 }
+
+export {};

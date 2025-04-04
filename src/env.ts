@@ -1,6 +1,6 @@
 export const nodeEnv = "dev";
 
-export const httpPort = 5000;
+export const httpPort = 5678;
 
 export const basePath = "/nest-js";
 
@@ -10,10 +10,12 @@ export const corsAllow = [
 
 export const logPath = "log";
 
+export const apmServerURL = "http://192.168.10.5:8200";
+
 export const dbConfig = {
-    host: "127.0.0.1",
-    port: 5432,
+    database: "wemo",
+    host    : "192.168.10.25",
+    password: "good1234",
+    port    : 5432,
     username: "postgres",
-    password: "postgres",
-    database: "postgres",
 };

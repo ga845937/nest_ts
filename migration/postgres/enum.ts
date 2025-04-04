@@ -1,10 +1,10 @@
 export enum TableName {
-    User = "user",
-    Wallet = "wallet",
-    History = "history",
+    HISTORY = "history",
+    USER = "user",
+    WALLET = "wallet",
 }
 
 export enum TypeName {
-    UserStatus = "user_status",
-    WalletStatus = "wallet_status",
+    USER_STATUS = "user_status",
+    WALLET_STATUS = "wallet_status",
 }

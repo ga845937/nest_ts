@@ -2,8 +2,8 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "nest_ts",
-            "preLaunchTask": "postgres_build",
+            "name": "nest-ts",
+            "preLaunchTask": "build",
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "node",
@@ -15,9 +15,21 @@
                 "tsconfig-paths/register"
             ],
             "args": ["src/main.ts"],
-            "cwd": "${workspaceRoot}",
-            "internalConsoleOptions": "openOnSessionStart",
-            "skipFiles": ["<node_internals>/**", "node_modules/**"]
+            "cwd": "${workspaceFolder}",
+            "autoAttachChildProcesses": true,
+            "sourceMaps": true,
+            "restart": true,
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "outFiles": ["dist/**/*.js"],
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ],
+            "env": {
+                "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json"
+            },
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

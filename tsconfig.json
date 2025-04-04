@@ -3,15 +3,19 @@
         "baseUrl": "./src/",
         "paths": {
             "@packageJson": ["../package.json"],
-            "@env": ["env"],
-            "@db/*": ["db/*"],
+            "@constant/*": ["constant/*"],
+            "@config": ["config"],
+            "@database/*": ["database/*"],
+            "@decorator/*": ["decorator/*"],
+            "@enum/*": ["enum/*"],
             "@filter/*": ["filter/*"],
             "@guard/*": ["guard/*"],
             "@interceptor/*": ["interceptor/*"],
             "@middleware/*": ["middleware/*"],
             "@module/*": ["module/*"],
             "@pipe/*": ["pipe/*"],
-            "@type/*": ["type/*"]
+            "@type/*": ["type/*"],
+            "@utility/*": ["utility/*"]
         },
         "target": "ES2022",
         "module": "CommonJS",

@@ -2,19 +2,19 @@ import type { QueryInterface } from "sequelize";
 
 import { TableName } from "../enum";
 
-export const up = async ({ context: queryInterface }: Record<string, QueryInterface>): Promise<void> => {
-    await queryInterface.bulkInsert(TableName.User, [
+export const up = async({ context: queryInterface }: Record<string, QueryInterface>): Promise<void> => {
+    await queryInterface.bulkInsert(TableName.USER, [
         {
             email: "kuo@example.com",
-            name: "kuo",
+            name : "kuo",
         },
         {
             email: "jay@example.com",
-            name: "jay",
+            name : "jay",
         },
     ]);
 
-    await queryInterface.bulkInsert(TableName.Wallet, [
+    await queryInterface.bulkInsert(TableName.WALLET, [
         {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             user_email: "kuo@example.com",
@@ -26,7 +26,7 @@ export const up = async ({ context: queryInterface }: Record<string, QueryInterf
     ]);
 };
 
-export const down = async ({ context: queryInterface }: Record<string, QueryInterface>): Promise<void> => {
-    await queryInterface.bulkDelete(TableName.User, null, {});
-    await queryInterface.bulkDelete(TableName.Wallet, null, {});
+export const down = async({ context: queryInterface }: Record<string, QueryInterface>): Promise<void> => {
+    await queryInterface.bulkDelete(TableName.USER, null, {});
+    await queryInterface.bulkDelete(TableName.WALLET, null, {});
 };

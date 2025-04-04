@@ -1,14 +1,16 @@
-import type { ModuleMetadata, Type, Provider } from "@nestjs/common";
+import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
 
-import { UserModule } from "module/user/user.module";
-
+import { FilterModule } from "@filter/filter.module";
+import { GuardModule } from "@guard/guard.module";
+import { InterceptorModule } from "@interceptor/interceptor.module";
+import { UserModule } from "@module/user/user.module";
 import { Module } from "@nestjs/common";
 
 const metadata: ModuleMetadata = {
-    imports: [UserModule] as Type<unknown>[],
     controllers: [] as Type<unknown>[],
-    providers: [] as Provider[],
-    exports: [] as Provider[],
+    exports    : [] as Provider[],
+    imports    : [GuardModule, InterceptorModule, FilterModule, UserModule] as Type<unknown>[],
+    providers  : [] as Provider[],
 };
 
 @Module(metadata)

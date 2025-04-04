@@ -1,6 +1,6 @@
 import type { ValidationError } from "@nestjs/common";
 
-import { Injectable, ValidationPipe, HttpException, HttpStatus } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, ValidationPipe } from "@nestjs/common";
 import { validate } from "class-validator";
 
 const getAllConstraints = (error: ValidationError[]): string[] => {
@@ -29,7 +29,7 @@ export class Validator extends ValidationPipe {
         });
     }
 
-    public internalValidate = async (instance: object): Promise<void> => {
+    public internalValidate = async(instance: object): Promise<void> => {
         const error: ValidationError[] = await validate(instance);
 
         if (error.length > 0) {
