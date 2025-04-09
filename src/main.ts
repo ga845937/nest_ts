@@ -1,3 +1,4 @@
+import { alsMiddleware } from "@middleware/als.middleware";
 import { NestFactory } from "@nestjs/core";
 import { Validator } from "@pipe/validator.pipe";
 import { basePath, corsAllow, httpPort } from "config";
@@ -23,7 +24,7 @@ const main = async(): Promise<void> => {
         const app = await NestFactory.create(MainModule, { cors });
         app.setGlobalPrefix(basePath);
         app.getHttpAdapter().getInstance().disable("x-powered-by");
-
+        app.use(alsMiddleware);
         app.useGlobalPipes(new Validator());
 
         initOpenAPI(app);

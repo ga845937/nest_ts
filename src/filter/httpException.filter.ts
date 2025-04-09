@@ -22,12 +22,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
         }
         logger.error(exception as Error);
 
+        const alsData = alsService.getStore();
+
         const responseData = {
             message,
-            traceID: alsService.getStore().traceID,
+            traceID: alsData.traceID,
         };
 
-        const alsData = alsService.getStore();
         const logData: ILogHTTP = {
             baseUrl   : request.baseUrl,
             duration  : +Date.now() - alsData.timestamp,

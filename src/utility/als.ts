@@ -1,6 +1,7 @@
 import type { IAlsData } from "@type/als.interface";
 
 import { AsyncLocalStorage } from "node:async_hooks";
+import { randomBytes } from "node:crypto";
 
 class AlsService {
     private readonly als: AsyncLocalStorage<IAlsData>;
@@ -9,12 +10,24 @@ class AlsService {
         this.als = new AsyncLocalStorage<IAlsData>();
     }
 
+    private initData(): IAlsData {
+        return {
+            responseData: {},
+            timestamp   : +Date.now(),
+            traceID     : randomBytes(6).toString("hex"),
+        };
+    }
+
     public getStore(): IAlsData {
         return this.als.getStore();
     }
 
-    public run(data: IAlsData, callback: () => void): void {
-        this.als.run(data, callback);
+    public run(callback: () => void): void {
+        if (this.als.getStore()) {
+            return callback();
+        }
+
+        this.als.run(this.initData(), callback);
     }
 }
 

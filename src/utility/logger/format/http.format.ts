@@ -18,7 +18,7 @@ export class HTTPLogFormat implements ILogFormat {
         return format.printf((info: TransformableInfo): string => {
             const log = baseFormat(info);
             const data = info.data as ILogHTTP;
-            const logString = `\x1b[34m${log.timestamp} [${log.level}] ${log.traceID} | [${data.method}] ${data.uri} [${data.httpStatus}] | ${JSON.stringify(data.response.data)} | ${data.duration}ms\x1b[0m`;
+            const logString = `\x1b[34m${log.timestamp} [${log.level}] ${log.traceID} | [${data.method}] [${data.httpStatus}] ${data.uri} | ${JSON.stringify(data.request)} | ${JSON.stringify(data.response.data)} | ${data.duration}ms\x1b[0m`;
             return logString;
         });
     }
