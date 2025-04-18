@@ -54,6 +54,7 @@ class Logger {
                 level  : "error",
                 message: error.message,
                 data   : {
+                    cause: error.cause,
                     error: error,
                 },
             });
@@ -65,6 +66,7 @@ class Logger {
                 level  : "error",
                 message: error.message,
                 data   : {
+                    cause: error.cause,
                     error: error,
                 },
             });
