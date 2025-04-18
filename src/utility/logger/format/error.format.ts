@@ -28,7 +28,14 @@ export class ErrorLogFormat implements ILogFormat {
     }
 
     private fileFormat(): Format {
-        return format.printf((info: TransformableInfo): string => JSON.stringify(Object.assign(baseFormat(info), info.data)));
+        return format.printf((info: TransformableInfo): string => {
+            const data = info.data as ILogError;
+            const error = {
+                cause: data.cause?.stack,
+                error: data.error.stack,
+            };
+            return JSON.stringify(Object.assign(baseFormat(info), error));
+        });
     }
 
     public consoleTransport(): Transport {
